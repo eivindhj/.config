@@ -1,3 +1,8 @@
+" For new installations, $CONFIG, $BUNDLES, and set rtp+=... may have to be changed
+
+
+
+
 " Set font size
 set guifont=Consolas:h12:b
 
@@ -12,8 +17,7 @@ let $CONFIG='~/.config/nvim/'
 let $BUNDLES='~/.config/nvim/bundles.vim'
 "let $SNIPPETS='C:\Users\eohje\Google Drive\programs\vim\ultisnips'
 
-" Colorscheme
-colorscheme evening
+
 
 " vim-latex settings. See
 " http://vim-latex.sourceforge.net/documentation/latex-suite/recommended-settings.html
@@ -21,9 +25,36 @@ colorscheme evening
 nmap <space>c :!pdflatex %<CR>
 nmap <space>b :!biber %:r.bcf<CR>
 
-" vundle
+
+
+" set up vundle
+" following github.com/arusahni/dotfiles
 " https://github.com/VundleVim/Vundle.vim
-source $CONFIG\bundles.vim
+let vundle_install = 1
+let vundle_readme = '~/.nvim/Vundle.vim/README.md'
+if !filereadable(vundle_readme)
+	echo "Installing Vundle..."
+	call mkdir('~/.nvim', "p")
+	execute "!git clone https://github.com/gmarik/vundle ~/.nvim/Vundle.vim"
+	let vundle_install = 0
+endif
+" Below is the official suggested vundle stuff
+filetype off
+set rtp+=~/.nvim/Vundle.vim
+call vundle#begin()
+source $BUNDLES
+call vundle#end()
+filetype plugin indent on
+if vundle_install == 0
+	echo "Installing Vundle plugins..."
+	PluginInstall
+endif
+
+
+" Colorscheme
+colorscheme evening
+
+
 
 " ultisnips
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
@@ -32,11 +63,8 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsEditSplit="vertical"		" If you want :UltiSnipsEdit to split your window.
 let g:tex_flavor="tex"
-" let g:UltiSnipsSnippetsDir=$SNIPPETS
+
 
 " Supertab
 autocmd BufRead,BufNewFile *.tex set iskeyword+=:,-
-
-" Start in the most commonly used folder
-"cd $PROJECTS
 
